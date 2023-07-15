@@ -44,9 +44,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework',
     'drf_yasg',
-
     "corsheaders",
-
+ 
     # local apps
     'student',
     'course',

@@ -1,17 +1,23 @@
 from django.db import models
+from django.conf import settings
+
 from autoslug import AutoSlugField
+from pathlib import Path
+import os
+import shutil
 
 from student.models import Student
 
 # Create your models here.
-
-
 class Teacher(models.Model):
     full_name = models.CharField(max_length=111)
     age = models.PositiveIntegerField()
     slug = AutoSlugField(populate_from='full_name', unique=True)
     degree = models.CharField(max_length=51)  # teacher darajasi
     about = models.TextField()
+    photo = models.ImageField(upload_to='teachers_photo/%Y/%m/%d/', blank=True, null=True, verbose_name="Rasm",
+        default= 'default_photos/teacher_photo.png'
+        )
 
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
@@ -26,15 +32,34 @@ class Teacher(models.Model):
         return self.full_name
 
 
+class CourseCategory(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Kursning kategoriyasi", unique=True)
+    slug = AutoSlugField(populate_from='name', unique=True)
+
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now=True)
+    update_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Kurs Kategoriyasi"
+        verbose_name_plural = "Kurs Kategoriyalari"
+        ordering = ('-created_at',)
+
+    def __str__(self):
+        return self.name
+
+
 class Course(models.Model):
     name = models.CharField(max_length=111, unique=True)
     slug = AutoSlugField(populate_from='name', unique=True)
+    category = models.ForeignKey(CourseCategory, on_delete=models.CASCADE, related_name='courses')
     teacher = models.ForeignKey(
         Teacher, on_delete=models.CASCADE, related_name='courses')
     lesson_count = models.PositiveIntegerField()
     cost = models.PositiveIntegerField(verbose_name='pul uchun', null=True)
     photo = models.ImageField(
         upload_to='course_photo/%Y/%m/%d/', blank=True, null=True)
+    short_video = models.TextField(blank=True, null=True, verbose_name='video EMBED')
     about = models.TextField(blank=True, null=True)
 
     status = models.BooleanField(default=True)
@@ -98,10 +123,10 @@ def slug_funckion_for_file_model(self):
 
 class File(models.Model):
     lesson = models.ForeignKey(
-        Lessons, on_delete=models.CASCADE, related_name='files')
-    file = models.FileField(upload_to='cours_file')
+        Lessons, on_delete=models.CASCADE, related_name='files')    
     slug = AutoSlugField(
         (u'slug'), populate_from=slug_funckion_for_file_model, unique=True)
+    file = models.FileField(upload_to='lessons_file/%Y/%m/%d/')
 
     status = models.BooleanField(default=True)
 
@@ -116,7 +141,6 @@ class File(models.Model):
 def slug_funckion_for_mycourse_model(self):
     """ Ikkita maydonni sludada birlashtirish """
     return "{}-{}".format(self.student.first_name, self.course.name)
-
 
 class MyCourse(models.Model):
     student = models.ForeignKey(
@@ -138,3 +162,8 @@ class MyCourse(models.Model):
 
     def __str__(self):
         return f"{self.course.name}"
+
+
+
+
+

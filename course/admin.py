@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Teacher, Course, Lessons, File, MyCourse, Unit
+from .models import Teacher, CourseCategory, Course, Lessons, File, MyCourse, Unit
 
 # Register your models here.
 
@@ -8,6 +8,12 @@ class TeacherAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'id', 'age', 'degree', 'status')
     list_filter = ('age', 'status')
     list_editable = ['status',]
+
+@admin.register(CourseCategory)
+class CourseCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'id', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    list_editable = ('status',)
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
