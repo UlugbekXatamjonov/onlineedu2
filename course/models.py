@@ -143,6 +143,7 @@ def slug_funckion_for_mycourse_model(self):
     return "{}-{}".format(self.student.first_name, self.course.name)
 
 class MyCourse(models.Model):
+    """  """
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE, related_name='my_courses')
     course = models.ForeignKey(Course, on_delete=models.CASCADE,)
@@ -155,15 +156,13 @@ class MyCourse(models.Model):
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
     update_at = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
         verbose_name = "Mening kursim"
         verbose_name_plural = "Mening kurslarim"
 
     def __str__(self):
         return f"{self.course.name}"
-
-
 
 
 

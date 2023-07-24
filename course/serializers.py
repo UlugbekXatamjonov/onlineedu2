@@ -24,10 +24,14 @@ class Courses_for_Category_APISerializer(serializers.ModelSerializer):
     teacher_name = serializers.CharField(source='teacher.full_name')
     teacher_slug = serializers.CharField(source='teacher.slug')
 
+    category_id = serializers.IntegerField(source='category.id')
+    category_slug = serializers.CharField(source='category.slug')
+
     class Meta:
         model = Course
         fields = ('id', 'name', 'slug', 'cost', 'photo', \
                     'teacher', 'teacher_name', 'teacher_slug',\
+                    'category_id', 'category_slug',
                     )
         
 class CourseCategory_APISerializer(serializers.ModelSerializer):

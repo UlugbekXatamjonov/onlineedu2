@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticate
 from rest_framework import status
 
 from .models import CourseCategory, Course,  Unit, Lessons, File, Teacher, MyCourse
-from .serializers import  CourseCategory_APISerializer,  Course_APISerializer, Unit_APISerializer, \
+from .serializers import  CourseCategory_APISerializer, Courses_for_Category_APISerializer,   Course_APISerializer, Unit_APISerializer, \
     Lesson_APISerializer, Teachers_list_APISerializer,  Teacher_APISerializer
 
 from student.models import Student
@@ -71,6 +71,17 @@ class Course_Viewset(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'slug'
 
+    def list(self, request, *args, **kwargs):
+        queryset = Course.objects.filter(status=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = Courses_for_Category_APISerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = Courses_for_Category_APISerializer(queryset, many=True)
+        return Response(serializer.data)
+    
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = Course_APISerializer(instance)
@@ -78,9 +89,6 @@ class Course_Viewset(ModelViewSet):
 
     """ HTTP_405_METHOD_NOT_ALLOWED """
     def create(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-    def list(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
     def update(self, request, *args, **kwargs):
