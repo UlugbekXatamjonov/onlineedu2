@@ -150,14 +150,29 @@ class Teachers_list_APISerializer(serializers.ModelSerializer):
 
 
 """ Account Section """
-# class MyCourseAPISerializer(serializers.ModelSerializer):
-#     course_name = serializers.CharField(source='course.name')
-#     course_lesson_count = serializers.IntegerField(source='course.lesson_count')
-#     course_slug = serializers.CharField(source='course.slug')
+class MyCourse_APISerializer(serializers.ModelSerializer):
+    """ Yangi Courseni qo'shish uchun Serializer """
+
+    class Meta:
+        model = MyCourse
+        fields = ('id', 'student', 'slug', 'course', 'coin', 'ball', 'next_lesson')
+
+class MyCourse_GET_APISerializer(serializers.ModelSerializer):
+    """ GET so'rovi uchun maxsus Serializer """
+    course_name = serializers.CharField(source='course.name')
+    course_lesson_count = serializers.IntegerField(source='course.lesson_count')
+    course_slug = serializers.CharField(source='course.slug')
+    course_photo = serializers.CharField(source='course.photo')
     
-#     class Meta:
-#         model = MyCourse
-#         fields = ('id', 'student', 'slug', 'course', 'course_name', 'course_slug', 'course_lesson_count',\
-#                    'coin', 'ball', 'next_lesson')
+    course_teacher_name = serializers.CharField(source='course.teacher.full_name')
+    course_teacher_id = serializers.IntegerField(source='course.teacher.id')
+    course_teacher_slug = serializers.CharField(source='course.teacher.slug')
+    
+    class Meta:
+        model = MyCourse
+        fields = ('id', 'slug', 'course_lesson_count', 'coin', 'ball', 'next_lesson', \
+                    'course_teacher_name', 'course_teacher_id', 'course_teacher_slug', \
+                    'course', 'course_name', 'course_slug', 'course_photo',
+                    )
 
 

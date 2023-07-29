@@ -100,7 +100,8 @@ class Lessons(models.Model):
     unit = models.ForeignKey(
         Unit, on_delete=models.CASCADE, related_name='lessons')
     about = models.TextField(verbose_name="dars haqida")
-    video = models.URLField(blank=True, null=True)
+    # video = models.URLField(blank=True, null=True)
+    video = models.FileField(blank=True, null=True, verbose_name="video")
     body = models.TextField(verbose_name="Dars matni", blank=True, null=True)
 
     status = models.BooleanField(default=True)
